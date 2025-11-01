@@ -21,15 +21,56 @@ class HomeScreen extends StatelessWidget {
         title: Text('Shop App'),
         actions: [
           Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: IconButton(
-              onPressed: () {
-                Navigator.pushNamed(context, MyCart.name);
-              },
-              icon: Icon(Icons.shopping_cart_outlined),
+            padding: const EdgeInsets.only(right: 16.0),
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                IconButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, MyCart.name);
+                  },
+                  icon: const Icon(Icons.shopping_cart_outlined, size: 28),
+                ),
+
+                // 🛒 Badge for showing cart item count
+                Positioned(
+                  right: 4,
+                  top: 4,
+                  child: Consumer<ProductController>(
+                    builder: (context, controller, child) {
+                      int count = controller.cart.length; // ধরে নিচ্ছি তোমার cart list এর নাম cartItems
+
+                      if (count == 0) return const SizedBox(); // যদি কিছু না থাকে তাহলে badge দেখাবে না
+
+                      return Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          shape: BoxShape.circle,
+                        ),
+                        constraints: const BoxConstraints(
+                          minWidth: 18,
+                          minHeight: 18,
+                        ),
+                        child: Center(
+                          child: Text(
+                            '$count',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
           ),
         ],
+
       ),
       //body part
       body: FutureBuilder(
